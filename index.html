@@ -1,13 +1,72 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React + TS</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SUI SEAL NFT Platform | Encrypted Content Sharing</title>
+  <meta name="description"
+    content="Share encrypted content on the Sui blockchain with precise access control using SEAL encryption technology.">
+  <style>
+    .page-loader {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #06060A;
+      z-index: 9999;
+      transition: opacity 0.3s ease-out;
+    }
+
+    .page-loader.loaded {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .loader-spinner {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 3px solid rgba(255, 255, 255, 0.1);
+      border-top-color: #ffffff;
+      animation: spin 1s infinite linear;
+      margin-bottom: 16px;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .loader-text {
+      font-family: -apple-system, system-ui, sans-serif;
+      color: #ffffff;
+      font-size: 16px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page-loader" id="page-loader">
+    <div class="loader-spinner"></div>
+    <div class="loader-text">Loading SUI SEAL Platform</div>
+  </div>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+  <script>
+    window.addEventListener('load', function () {
+      setTimeout(function () {
+        document.getElementById('page-loader').classList.add('loaded');
+      }, 300);
+    });
+  </script>
+</body>
+
 </html>
