@@ -305,13 +305,13 @@ export function WalrusUpload({
   return (
     <Card className="overflow-hidden border-border/60 bg-background/50 backdrop-blur-sm">
       <CardContent className="p-6">
-        <h2 className="text-xl font-bold mb-6">Upload Encrypted Content</h2>
+        <h2 className="text-xl font-bold mb-6">Upload Exclusive Photos</h2>
 
         <div className="grid gap-6">
           {/* Walrus service selector */}
           <div className="space-y-2">
             <label className="text-sm font-medium block mb-1">
-              Select Walrus service:
+              Select upload service:
             </label>
             <div className="relative rounded-md border border-input">
               <select
@@ -384,7 +384,7 @@ export function WalrusUpload({
                     <Upload className="h-6 w-6 text-primary" />
                   </div>
                   <h3 className="text-lg font-semibold">
-                    Drag & drop your image
+                    Add exclusive photos
                   </h3>
                   <p className="text-sm text-muted-foreground mt-1 mb-4">
                     PNG, JPG or GIF up to 10MB
@@ -425,7 +425,7 @@ export function WalrusUpload({
               ) : (
                 <>
                   <ArrowUpCircle className="h-4 w-4" />
-                  First step: Encrypt and upload to Walrus
+                  First step: Encrypt and upload photo
                 </>
               )}
             </Button>
@@ -477,7 +477,7 @@ export function WalrusUpload({
                     }}
                     aria-label="Download encrypted blob"
                   >
-                    View encrypted blob
+                    View encrypted photo
                   </a>
                 </div>
 
@@ -509,7 +509,7 @@ export function WalrusUpload({
             className="w-full"
             aria-label="Associate file to Sui object"
           >
-            Second step: Associate file to Sui object
+            Second step: Add to membership content
           </Button>
         </div>
       </CardContent>

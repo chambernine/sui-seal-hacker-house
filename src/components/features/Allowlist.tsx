@@ -23,6 +23,7 @@ import {
   User,
   Users,
   X,
+  Lock,
 } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { isValidSuiAddress } from "@mysten/sui/utils";
@@ -106,7 +107,7 @@ export function Allowlist({ setRecipientAllowlist, setCapId }: AllowlistProps) {
         });
         setRecipientAllowlist(id!);
       } catch (error) {
-        console.error("Error fetching allowlist:", error);
+        console.error("Error fetching membership tier:", error);
       } finally {
         setIsLoading(false);
       }
@@ -143,7 +144,7 @@ export function Allowlist({ setRecipientAllowlist, setCapId }: AllowlistProps) {
   ) => {
     if (newAddressToAdd.trim() !== "") {
       if (!isValidSuiAddress(newAddressToAdd.trim())) {
-        alert("Invalid address");
+        alert("Invalid wallet address");
         return;
       }
 
@@ -173,7 +174,7 @@ export function Allowlist({ setRecipientAllowlist, setCapId }: AllowlistProps) {
           }
         );
       } catch (error) {
-        console.error("Error adding address:", error);
+        console.error("Error adding subscriber:", error);
       } finally {
         setIsAddingAddress(false);
       }
@@ -210,7 +211,7 @@ export function Allowlist({ setRecipientAllowlist, setCapId }: AllowlistProps) {
           }
         );
       } catch (error) {
-        console.error("Error removing address:", error);
+        console.error("Error removing subscriber:", error);
       } finally {
         setIsRemoving(null);
       }
@@ -250,7 +251,7 @@ export function Allowlist({ setRecipientAllowlist, setCapId }: AllowlistProps) {
             <div className="flex flex-col items-center gap-2">
               <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
               <p className="text-sm text-muted-foreground">
-                Loading allowlist information...
+                Loading membership information...
               </p>
             </div>
           </div>
@@ -261,12 +262,12 @@ export function Allowlist({ setRecipientAllowlist, setCapId }: AllowlistProps) {
                 <div>
                   <CardTitle className="text-2xl flex items-center gap-2">
                     <div className="bg-primary/10 p-1.5 rounded-full">
-                      <Users className="h-5 w-5 text-primary" />
+                      <Lock className="h-5 w-5 text-primary" />
                     </div>
                     {allowlist?.name}
                   </CardTitle>
                   <CardDescription className="flex items-center gap-1 mt-1">
-                    <span>Allowlist ID:</span>
+                    <span>Membership ID:</span>
                     {allowlist?.id && getObjectExplorerLink(allowlist.id)}
                   </CardDescription>
                 </div>
@@ -297,7 +298,7 @@ export function Allowlist({ setRecipientAllowlist, setCapId }: AllowlistProps) {
                   >
                     <Button size="sm" className="gap-1.5 w-full">
                       <ExternalLink className="h-3.5 w-3.5" />
-                      View as User
+                      View as Subscriber
                     </Button>
                   </a>
                 </div>
@@ -307,25 +308,25 @@ export function Allowlist({ setRecipientAllowlist, setCapId }: AllowlistProps) {
             <CardContent className="space-y-6">
               <div className="p-4 rounded-lg bg-primary/5 border border-primary/10">
                 <h3 className="text-sm font-medium mb-1 flex items-center gap-1.5">
-                  <Users className="h-4 w-4 text-primary/70" />
-                  Share access
+                  <Lock className="h-4 w-4 text-primary/70" />
+                  Exclusive Content Management
                 </h3>
                 <p className="text-sm text-muted-foreground">
-                  Share the link with users to access the files associated with
-                  this allowlist. Only addresses you add below will be able to
-                  decrypt the content.
+                  Share your membership link with users to access your exclusive
+                  photos. Only subscribers you add below will be able to decrypt
+                  and view your content.
                 </p>
               </div>
 
               <div className="space-y-4">
-                <h3 className="text-lg font-medium">Manage Access</h3>
+                <h3 className="text-lg font-medium">Manage Subscribers</h3>
 
                 {/* Add new address form */}
                 <div className="flex flex-col sm:flex-row gap-2">
                   <div className="relative flex-grow">
                     <input
                       className="w-full rounded-md border bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/20"
-                      placeholder="Add new address (0x...)"
+                      placeholder="Add subscriber wallet address (0x...)"
                       value={newAddress}
                       onChange={(e) => setNewAddress(e.target.value)}
                       disabled={isAddingAddress}
@@ -342,25 +343,25 @@ export function Allowlist({ setRecipientAllowlist, setCapId }: AllowlistProps) {
                     ) : (
                       <Plus className="h-4 w-4" />
                     )}
-                    Add Address
+                    Add Subscriber
                   </Button>
                 </div>
 
-                {/* Search addresses */}
+                {/* Search subscribers */}
                 {Array.isArray(allowlist?.list) &&
                   allowlist?.list.length > 0 && (
                     <div className="relative">
                       <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground pointer-events-none" />
                       <input
                         className="w-full rounded-md border bg-transparent pl-9 pr-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/20"
-                        placeholder="Search addresses..."
+                        placeholder="Search subscribers..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
                       />
                     </div>
                   )}
 
-                {/* Address list */}
+                {/* Subscriber list */}
                 <div className="border rounded-lg divide-y">
                   {Array.isArray(filteredList) && filteredList.length > 0 ? (
                     <div className="max-h-[300px] overflow-y-auto">
@@ -399,17 +400,17 @@ export function Allowlist({ setRecipientAllowlist, setCapId }: AllowlistProps) {
                         <div className="bg-muted p-3 rounded-full">
                           <Users className="h-6 w-6 text-muted-foreground" />
                         </div>
-                        <p className="font-medium">No addresses added yet</p>
+                        <p className="font-medium">No subscribers yet</p>
                         <p className="text-sm text-muted-foreground max-w-xs">
-                          Add wallet addresses to grant access to your encrypted
-                          content.
+                          Add wallet addresses to give subscribers access to
+                          your exclusive photos.
                         </p>
                       </div>
                     </div>
                   )}
                 </div>
 
-                {/* Address count */}
+                {/* Subscriber count */}
                 {Array.isArray(allowlist?.list) &&
                   allowlist?.list.length > 0 && (
                     <div className="flex justify-between items-center text-sm text-muted-foreground">
@@ -419,10 +420,10 @@ export function Allowlist({ setRecipientAllowlist, setCapId }: AllowlistProps) {
                         filteredList.length !== allowlist?.list.length ? (
                           <>
                             Showing {filteredList?.length} of{" "}
-                            {allowlist?.list.length} addresses
+                            {allowlist?.list.length} subscribers
                           </>
                         ) : (
-                          <>{allowlist?.list.length} addresses in allowlist</>
+                          <>{allowlist?.list.length} subscribers total</>
                         )}
                       </span>
 

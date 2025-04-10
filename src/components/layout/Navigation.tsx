@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Globe, Menu, X } from "lucide-react";
+import { Lock, Menu, X } from "lucide-react";
 import { useCurrentAccount } from "@mysten/dapp-kit";
 import { ConnectButton } from "@mysten/dapp-kit";
 import { ThemeToggle } from "../theme-toggle";
@@ -15,8 +15,8 @@ export const Navigation = () => {
 
   const navItems = [
     { name: "Home", path: "/" },
-    { name: "Create Allowlist", path: "/allowlist-example" },
-    { name: "My Allowlists", path: "/allowlist-example/admin/allowlists" },
+    { name: "Create Membership", path: "/allowlist-example" },
+    { name: "My Content", path: "/allowlist-example/admin/allowlists" },
   ];
 
   return (
@@ -26,9 +26,9 @@ export const Navigation = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2">
             <div className="bg-primary/10 p-2 rounded-full">
-              <Globe className="h-5 w-5 text-primary" />
+              <Lock className="h-5 w-5 text-primary" />
             </div>
-            <span className="font-bold text-lg">SUI SEAL</span>
+            <span className="font-bold text-lg">CryptoFans</span>
           </Link>
 
           {/* Desktop navigation */}

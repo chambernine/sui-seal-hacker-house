@@ -2,10 +2,26 @@ import { useCurrentAccount, useSuiClient } from "@mysten/dapp-kit";
 import { useCallback, useEffect, useState } from "react";
 import { useNetworkVariable } from "../../config/networkConfig";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { getObjectExplorerLink } from "@/lib/sui";
 import { motion } from "framer-motion";
-import { ListChecks, FileText, Settings, User, Users, ExternalLink, Loader2 } from "lucide-react";
+import {
+  ListChecks,
+  FileText,
+  Settings,
+  User,
+  Users,
+  ExternalLink,
+  Loader2,
+  Image,
+  Lock,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 
@@ -26,14 +42,14 @@ const container = {
   show: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1
-    }
-  }
+      staggerChildren: 0.1,
+    },
+  },
 };
 
 const item = {
   hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0 }
+  show: { opacity: 1, y: 0 },
 };
 
 export function AllAllowlist() {
@@ -58,7 +74,7 @@ export function AllAllowlist() {
           StructType: `${packageId}::allowlist::Cap`,
         },
       });
-      
+
       const caps = res.data
         .map((obj) => {
           const fields = (obj!.data!.content as { fields: any }).fields;
@@ -68,7 +84,7 @@ export function AllAllowlist() {
           };
         })
         .filter((item) => item !== null) as Cap[];
-      
+
       const cardItems: CardItem[] = await Promise.all(
         caps.map(async (cap) => {
           const allowlist = await suiClient.getObject({
@@ -81,14 +97,14 @@ export function AllAllowlist() {
             cap_id: cap.id,
             allowlist_id: cap.allowlist_id,
             list: fields.list || [],
-            name: fields.name || "Unnamed Allowlist",
+            name: fields.name || "Unnamed Membership",
           };
         })
       );
-      
+
       setCardItems(cardItems);
     } catch (error) {
-      console.error("Error fetching allowlists:", error);
+      console.error("Error fetching memberships:", error);
     } finally {
       setIsLoading(false);
     }
@@ -107,7 +123,9 @@ export function AllAllowlist() {
       <div className="flex items-center justify-center p-12">
         <div className="flex flex-col items-center gap-2">
           <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
-          <p className="text-sm text-muted-foreground">Loading your allowlists...</p>
+          <p className="text-sm text-muted-foreground">
+            Loading your content...
+          </p>
         </div>
       </div>
     );
@@ -116,22 +134,25 @@ export function AllAllowlist() {
   return (
     <div className="space-y-8">
       <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-bold tracking-tight">Your Allowlists</h1>
-        <p className="text-muted-foreground">Manage access to your encrypted content</p>
+        <h1 className="text-3xl font-bold tracking-tight">Your Content</h1>
+        <p className="text-muted-foreground">
+          Manage your exclusive photo albums and subscriber access
+        </p>
       </div>
-      
+
       {cardItems.length === 0 ? (
         <Card className="overflow-hidden bg-background/50 backdrop-blur-sm border-border/60">
           <CardContent className="flex flex-col items-center text-center p-12 gap-4">
             <div className="bg-muted/50 p-4 rounded-full">
-              <ListChecks className="h-10 w-10 text-muted-foreground" />
+              <Image className="h-10 w-10 text-muted-foreground" />
             </div>
-            <h3 className="text-lg font-medium">No Allowlists Found</h3>
+            <h3 className="text-lg font-medium">No Content Found</h3>
             <p className="text-muted-foreground max-w-md">
-              You haven't created any allowlists yet. Allowlists help you control who can access your encrypted content.
+              You haven't created any membership tiers yet. Create your first
+              tier to start sharing exclusive content.
             </p>
             <Button onClick={handleCreateNew} className="mt-2">
-              Create Your First Allowlist
+              Create Your First Membership
             </Button>
           </CardContent>
         </Card>
@@ -143,15 +164,22 @@ export function AllAllowlist() {
           className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
         >
           {cardItems.map((item) => (
-            <motion.div key={`${item.cap_id}-${item.allowlist_id}`} variants={item}>
+            <motion.div
+              key={`${item.cap_id}-${item.allowlist_id}`}
+              variants={item}
+            >
               <Card className="overflow-hidden h-full bg-background/50 backdrop-blur-sm border-border/60 hover:border-primary/30 transition-all">
                 <CardHeader className="pb-3">
                   <div className="flex justify-between items-start">
                     <div className="bg-primary/10 p-2 rounded-full">
-                      <FileText className="h-5 w-5 text-primary" />
+                      <Lock className="h-5 w-5 text-primary" />
                     </div>
-                    <Badge variant="outline" className="bg-background/70 backdrop-blur-sm">
-                      {item.list.length} {item.list.length === 1 ? 'Address' : 'Addresses'}
+                    <Badge
+                      variant="outline"
+                      className="bg-background/70 backdrop-blur-sm"
+                    >
+                      {item.list.length}{" "}
+                      {item.list.length === 1 ? "Subscriber" : "Subscribers"}
                     </Badge>
                   </div>
                   <CardTitle className="mt-1 truncate">{item.name}</CardTitle>
@@ -161,54 +189,55 @@ export function AllAllowlist() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {/* User list preview */}
+                  {/* Subscriber list preview */}
                   <div className="p-3 bg-background/70 rounded-md border">
                     <h4 className="text-xs uppercase text-muted-foreground mb-2 flex items-center gap-1">
-                      <Users className="h-3 w-3" /> Access List
+                      <Users className="h-3 w-3" /> Subscribers
                     </h4>
                     {item.list.length > 0 ? (
                       <div className="space-y-1.5">
                         {item.list.slice(0, 3).map((address, idx) => (
                           <div key={idx} className="flex items-center gap-1.5">
                             <User className="h-3 w-3 text-muted-foreground" />
-                            <span className="text-xs font-mono truncate">{address.substring(0, 12)}...</span>
+                            <span className="text-xs font-mono truncate">
+                              {address.substring(0, 12)}...
+                            </span>
                           </div>
                         ))}
                         {item.list.length > 3 && (
                           <div className="text-xs text-muted-foreground italic">
-                            +{item.list.length - 3} more addresses
+                            +{item.list.length - 3} more subscribers
                           </div>
                         )}
                       </div>
                     ) : (
-                      <p className="text-xs text-muted-foreground">No addresses added yet</p>
+                      <p className="text-xs text-muted-foreground">
+                        No subscribers added yet
+                      </p>
                     )}
                   </div>
-                  
+
                   {/* Action buttons */}
                   <div className="flex flex-col sm:flex-row gap-2">
-                    <Link 
-                      to={`/allowlist-example/admin/allowlist/${item.allowlist_id}`} 
+                    <Link
+                      to={`/allowlist-example/admin/allowlist/${item.allowlist_id}`}
                       className="flex-1"
                     >
-                      <Button 
-                        variant="default" 
-                        className="w-full gap-1.5"
-                      >
+                      <Button variant="default" className="w-full gap-1.5">
                         <Settings className="h-3.5 w-3.5" />
-                        Manage
+                        Manage Content
                       </Button>
                     </Link>
-                    <Link 
+                    <Link
                       to={`/allowlist-example/view/allowlist/${item.allowlist_id}`}
                       className="flex-1"
                     >
-                      <Button 
-                        variant="outline" 
+                      <Button
+                        variant="outline"
                         className="w-full gap-1.5 border-primary/20 hover:border-primary/40"
                       >
                         <ExternalLink className="h-3.5 w-3.5" />
-                        View
+                        Preview
                       </Button>
                     </Link>
                   </div>
@@ -216,19 +245,22 @@ export function AllAllowlist() {
               </Card>
             </motion.div>
           ))}
-          
-          {/* Add new allowlist card */}
+
+          {/* Add new tier card */}
           <motion.div variants={item}>
-            <Card className="overflow-hidden h-full bg-background/30 backdrop-blur-sm border-dashed border-border/60 hover:border-primary/30 transition-all flex flex-col items-center justify-center p-6 text-center cursor-pointer" onClick={handleCreateNew}>
+            <Card
+              className="overflow-hidden h-full bg-background/30 backdrop-blur-sm border-dashed border-border/60 hover:border-primary/30 transition-all flex flex-col items-center justify-center p-6 text-center cursor-pointer"
+              onClick={handleCreateNew}
+            >
               <div className="bg-primary/5 p-4 rounded-full mb-4">
                 <ListChecks className="h-8 w-8 text-primary/70" />
               </div>
-              <h3 className="text-lg font-medium">Create New Allowlist</h3>
+              <h3 className="text-lg font-medium">Create New Tier</h3>
               <p className="text-sm text-muted-foreground mt-2 mb-4">
-                Set up a new collection with access controls
+                Set up a new membership tier with exclusive content
               </p>
               <Button variant="outline" size="sm">
-                Create Allowlist
+                Create Tier
               </Button>
             </Card>
           </motion.div>

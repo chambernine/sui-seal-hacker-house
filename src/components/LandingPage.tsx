@@ -2,17 +2,17 @@ import { motion } from "framer-motion";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Heart, MoreHorizontal } from "lucide-react";
+import { Heart, MoreHorizontal, Lock, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-interface NFT {
+interface Creator {
   id: number;
-  title: string;
+  name: string;
   price: string;
-  image: string;
-  artist: string;
-  likes: number;
-  category?: string;
+  profileImage: string;
+  bio: string;
+  subscribers: number;
+  contentType?: string;
 }
 
 const container = {
@@ -30,183 +30,164 @@ const item = {
   show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
 };
 
-const nfts: NFT[] = [
+const creators: Creator[] = [
   {
     id: 1,
-    title: "Cosmic Dreamer #1",
-    price: "2.5 SUI",
-    image:
+    name: "CryptoArtist",
+    price: "2.5 SUI ",
+    profileImage:
       "https://images.unsplash.com/photo-1634973357973-f2ed2657db3c?w=800&auto=format&fit=crop&q=60",
-    artist: "CryptoArtist",
-    likes: 234,
-    category: "Abstract",
+    bio: "Digital artist sharing exclusive photography collections",
+    subscribers: 234,
+    contentType: "Photography",
   },
   {
     id: 2,
-    title: "Digital Paradise #7",
-    price: "1.8 SUI",
-    image:
+    name: "PixelMaster",
+    price: "1.8 SUI ",
+    profileImage:
       "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&auto=format&fit=crop&q=60",
-    artist: "PixelMaster",
-    likes: 189,
-    category: "Digital Art",
+    bio: "Creating unique AI-generated art and photo collections",
+    subscribers: 189,
+    contentType: "Digital Art",
   },
   {
     id: 3,
-    title: "Abstract Minds #3",
-    price: "3.2 SUI",
-    image:
+    name: "AbstractMinds",
+    price: "3.2 SUI ",
+    profileImage:
       "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=800&auto=format&fit=crop&q=60",
-    artist: "Web3Creator",
-    likes: 456,
-    category: "Generative",
+    bio: "Experimental photography and artistic collections",
+    subscribers: 456,
+    contentType: "Mixed Media",
   },
   {
     id: 4,
-    title: "Future Visions #5",
-    price: "1.5 SUI",
-    image:
+    name: "FutureVisions",
+    price: "1.5 SUI ",
+    profileImage:
       "https://images.unsplash.com/photo-1633101585272-9512182e107b?w=800&auto=format&fit=crop&q=60",
-    artist: "NFTGenius",
-    likes: 321,
-    category: "Photography",
+    bio: "Sci-fi and futuristic themed photo albums",
+    subscribers: 321,
+    contentType: "Photography",
   },
   {
     id: 5,
-    title: "Neon Dreams",
-    price: "2.7 SUI",
-    image:
+    name: "NeonDreams",
+    price: "2.7 SUI ",
+    profileImage:
       "https://images.unsplash.com/photo-1647163927406-56e868e8bb80?w=800&auto=format&fit=crop&q=60",
-    artist: "DigitalWizard",
-    likes: 278,
-    category: "Illustration",
+    bio: "Urban photography with neon aesthetics",
+    subscribers: 278,
+    contentType: "Photography",
   },
   {
     id: 6,
-    title: "Quantum Fragment",
-    price: "4.2 SUI",
-    image:
+    name: "QuantumFragments",
+    price: "4.2 SUI ",
+    profileImage:
       "https://images.unsplash.com/photo-1618172193763-c511deb635ca?w=800&auto=format&fit=crop&q=60",
-    artist: "CryptoGenius",
-    likes: 512,
-    category: "3D Art",
+    bio: "Abstract art and experimental photography",
+    subscribers: 512,
+    contentType: "Mixed Media",
   },
   {
     id: 7,
-    title: "Ethereal Space",
-    price: "1.9 SUI",
-    image:
+    name: "EtherealSpaces",
+    price: "1.9 SUI ",
+    profileImage:
       "https://images.unsplash.com/photo-1617791160588-241658c0f566?w=800&auto=format&fit=crop&q=60",
-    artist: "SuiArtist",
-    likes: 189,
-    category: "Digital Art",
+    bio: "Nature and landscape photography collections",
+    subscribers: 189,
+    contentType: "Photography",
   },
   {
     id: 8,
-    title: "Blockchain Visions",
-    price: "3.5 SUI",
-    image:
+    name: "BlockchainVisions",
+    price: "3.5 SUI ",
+    profileImage:
       "https://images.unsplash.com/photo-1633186726100-3e86214e00e3?w=800&auto=format&fit=crop&q=60",
-    artist: "CryptoDesigner",
-    likes: 345,
-    category: "Abstract",
+    bio: "Crypto-themed art and photography",
+    subscribers: 345,
+    contentType: "Digital Art",
   },
 ];
 
 export function LandingPage() {
   return (
     <div className="space-y-10">
-      <div className="flex flex-wrap gap-2 justify-center">
-        {[
-          "All",
-          "Abstract",
-          "Digital Art",
-          "Generative",
-          "Photography",
-          "3D Art",
-          "Illustration",
-        ].map((category) => (
-          <Button
-            key={category}
-            variant={category === "All" ? "secondary" : "outline"}
-            size="sm"
-            className={cn(
-              "rounded-full",
-              category === "All" &&
-                "bg-primary/20 hover:bg-primary/30 text-primary dark:bg-primary/10"
-            )}
-          >
-            {category}
-          </Button>
-        ))}
-      </div>
-
       <motion.div
         variants={container}
         initial="hidden"
         animate="show"
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
       >
-        {nfts.map((nft) => (
+        {creators.map((creator) => (
           <motion.div
-            key={nft.id}
+            key={creator.id}
             variants={item}
             whileHover={{ y: -5 }}
             className="h-full"
           >
             <Card className="overflow-hidden h-full bg-background/50 backdrop-blur-sm border-border/60 hover:border-primary/50 transition-all duration-300">
               <div className="relative aspect-square">
-                {/* NFT image with gradient overlay at the bottom */}
+                {/* Creator profile image with gradient overlay at the bottom */}
                 <img
-                  src={nft.image}
-                  alt={nft.title}
+                  src={creator.profileImage}
+                  alt={creator.name}
                   className="object-cover w-full h-full"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
 
-                {/* Category badge */}
+                {/* Content type badge */}
                 <Badge
                   variant="secondary"
                   className="absolute top-3 left-3 bg-background/80 backdrop-blur-sm"
                 >
-                  {nft.category}
+                  {creator.contentType}
                 </Badge>
 
-                {/* Action buttons */}
-                <div className="absolute top-3 right-3">
-                  <Button
-                    size="icon"
-                    variant="outline"
-                    className="rounded-full size-8 bg-background/80 backdrop-blur-sm border-border/60"
+                {/* Locked content icon */}
+                <div className="absolute bottom-3 right-3">
+                  <Badge
+                    variant="secondary"
+                    className="bg-background/80 backdrop-blur-sm flex gap-1 items-center"
                   >
-                    <MoreHorizontal className="h-4 w-4" />
-                  </Button>
+                    <Lock className="h-3 w-3" />
+                    Exclusive Content
+                  </Badge>
+                </div>
+
+                {/* Creator name on image */}
+                <div className="absolute bottom-3 left-3">
+                  <h3 className="font-bold text-white text-lg">
+                    {creator.name}
+                  </h3>
                 </div>
               </div>
 
               <div className="p-4">
                 <div className="flex items-center justify-between mb-2">
-                  <h3 className="font-semibold truncate">{nft.title}</h3>
+                  <span className="text-sm text-muted-foreground truncate">
+                    {creator.bio}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between mb-4">
                   <Badge
                     variant="secondary"
                     className="bg-primary/10 text-primary border-primary/20"
                   >
-                    {nft.price}
+                    {creator.price}
                   </Badge>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground truncate">
-                    {nft.artist}
-                  </span>
                   <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                    <Heart className="h-3.5 w-3.5" />
-                    <span>{nft.likes}</span>
+                    <Users className="h-3.5 w-3.5" />
+                    <span>{creator.subscribers} subscribers</span>
                   </div>
                 </div>
 
-                <div className="mt-4">
+                <div className="mt-2">
                   <Button className="w-full" size="sm">
-                    View Details
+                    Subscribe
                   </Button>
                 </div>
               </div>

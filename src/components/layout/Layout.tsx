@@ -15,10 +15,11 @@ export function Layout({ children }: LayoutProps) {
       <footer className="mt-auto py-6 border-t border-border/40 bg-background/80 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <p className="text-muted-foreground text-sm">
-            Built with SEAL encryption technology on Sui blockchain
+            CryptoFans - Exclusive content secured with SEAL encryption on Sui
+            blockchain
           </p>
           <p className="text-muted-foreground text-xs mt-1">
-            Secure, private, and decentralized
+            Private, secure, and decentralized photo sharing
           </p>
         </div>
       </footer>

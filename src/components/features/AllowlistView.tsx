@@ -43,7 +43,7 @@ import {
   Key,
   LockKeyhole,
   Loader2,
-  Shield,
+  Lock,
   Unlock,
 } from "lucide-react";
 import { Badge } from "../ui/badge";
@@ -118,7 +118,7 @@ const Feeds: React.FC<{ suiAddress: string }> = ({ suiAddress }) => {
       const fields = (allowlist.data?.content as { fields: any })?.fields || {};
       const feedData = {
         allowlistId: id!,
-        allowlistName: fields?.name || "Unnamed Allowlist",
+        allowlistName: fields?.name || "Unnamed Membership",
         blobIds: encryptedObjects,
       };
       setFeed(feedData);
@@ -207,11 +207,11 @@ const Feeds: React.FC<{ suiAddress: string }> = ({ suiAddress }) => {
     >
       <div className="flex flex-col gap-2">
         <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
-          <Shield className="h-6 w-6 text-primary" />
-          Encrypted Content
+          <Lock className="h-6 w-6 text-primary" />
+          Premium Content
         </h1>
         <p className="text-muted-foreground">
-          Access encrypted content shared with you
+          Access exclusive photos from your subscription
         </p>
       </div>
 
@@ -221,7 +221,7 @@ const Feeds: React.FC<{ suiAddress: string }> = ({ suiAddress }) => {
             <div className="flex flex-col items-center gap-2">
               <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
               <p className="text-sm text-muted-foreground">
-                Loading allowlist information...
+                Loading subscription information...
               </p>
             </div>
           </div>
@@ -232,7 +232,7 @@ const Feeds: React.FC<{ suiAddress: string }> = ({ suiAddress }) => {
                 <div className="flex flex-col">
                   <CardTitle>{feed?.allowlistName}</CardTitle>
                   <CardDescription className="flex items-center gap-1">
-                    <span>Allowlist ID:</span>
+                    <span>Membership ID:</span>
                     {feed?.allowlistId &&
                       getObjectExplorerLink(feed.allowlistId)}
                   </CardDescription>
@@ -243,7 +243,7 @@ const Feeds: React.FC<{ suiAddress: string }> = ({ suiAddress }) => {
                     className="bg-background/70 backdrop-blur-sm"
                   >
                     {feed.blobIds.length}{" "}
-                    {feed.blobIds.length === 1 ? "Item" : "Items"} Available
+                    {feed.blobIds.length === 1 ? "Photo" : "Photos"} Available
                   </Badge>
                 )}
               </div>
@@ -256,11 +256,11 @@ const Feeds: React.FC<{ suiAddress: string }> = ({ suiAddress }) => {
                     <FileImage className="h-10 w-10 text-muted-foreground" />
                   </div>
                   <h3 className="text-lg font-medium">
-                    No Encrypted Files Found
+                    No Exclusive Photos Found
                   </h3>
                   <p className="text-muted-foreground max-w-md mt-2">
-                    There are no encrypted files in this allowlist yet, or you
-                    may not have permission to access them.
+                    There are no photos in this membership tier yet, or you may
+                    not have permission to access them.
                   </p>
                 </div>
               ) : (
@@ -271,13 +271,12 @@ const Feeds: React.FC<{ suiAddress: string }> = ({ suiAddress }) => {
                     </div>
                     <div>
                       <h3 className="text-sm font-medium mb-1">
-                        Encrypted Content
+                        Encrypted Premium Photos
                       </h3>
                       <p className="text-sm text-muted-foreground mb-2">
-                        This allowlist contains {feed.blobIds.length} encrypted{" "}
-                        {feed.blobIds.length === 1 ? "file" : "files"} that you
-                        may be able to access if your address is on the
-                        allowlist.
+                        This membership contains {feed.blobIds.length} encrypted{" "}
+                        {feed.blobIds.length === 1 ? "photo" : "photos"} that
+                        you can access with your subscription.
                       </p>
                       <div className="flex flex-wrap gap-2 items-center">
                         <Button
@@ -293,7 +292,7 @@ const Feeds: React.FC<{ suiAddress: string }> = ({ suiAddress }) => {
                           ) : (
                             <>
                               <Unlock className="h-4 w-4" />
-                              Decrypt and View Content
+                              View Exclusive Photos
                             </>
                           )}
                         </Button>
@@ -318,7 +317,7 @@ const Feeds: React.FC<{ suiAddress: string }> = ({ suiAddress }) => {
                       <DialogHeader>
                         <DialogTitle className="flex items-center gap-2">
                           <Images className="h-5 w-5" />
-                          Decrypted Content
+                          Exclusive Photos
                         </DialogTitle>
                       </DialogHeader>
 
@@ -331,12 +330,12 @@ const Feeds: React.FC<{ suiAddress: string }> = ({ suiAddress }) => {
                             >
                               <img
                                 src={url}
-                                alt={`Decrypted image ${index + 1}`}
+                                alt={`Premium photo ${index + 1}`}
                                 className="aspect-square w-full object-cover object-center"
                               />
                               <div className="p-2 text-center">
                                 <p className="text-sm font-medium">
-                                  Image {index + 1}
+                                  Exclusive Photo {index + 1}
                                 </p>
                               </div>
                             </div>
@@ -372,7 +371,7 @@ const Feeds: React.FC<{ suiAddress: string }> = ({ suiAddress }) => {
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2">
               <LockKeyhole className="h-5 w-5 text-destructive" />
-              Decryption Error
+              Access Error
             </AlertDialogTitle>
             <AlertDialogDescription>{error}</AlertDialogDescription>
           </AlertDialogHeader>
