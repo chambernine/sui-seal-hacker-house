@@ -9,6 +9,7 @@ import Feeds from "./components/features/AllowlistView";
 import { Layout } from "./components/layout/Layout";
 import { HomePage } from "./components/pages/HomePage";
 import { WelcomeScreen } from "./components/pages/WelcomeScreen";
+import "@mysten/dapp-kit/dist/index.css";
 
 function App() {
   const currentAccount = useCurrentAccount();
