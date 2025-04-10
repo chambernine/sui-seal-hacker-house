@@ -5,8 +5,8 @@ import { ThemeProvider } from "./components/theme-provider";
 import { SuiClientProvider, WalletProvider } from "@mysten/dapp-kit";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "./index.css";
-const queryClient = new QueryClient();
 import { networkConfig } from "./config/networkConfig.ts";
+const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
