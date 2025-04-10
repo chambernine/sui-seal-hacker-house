@@ -136,7 +136,7 @@ export function AllAllowlist() {
       <div className="flex flex-col gap-2">
         <h1 className="text-3xl font-bold tracking-tight">Your Content</h1>
         <p className="text-muted-foreground">
-          Manage your exclusive photo albums and subscriber access
+          Manage your exclusive photo contents and subscriber access
         </p>
       </div>
 
@@ -164,10 +164,7 @@ export function AllAllowlist() {
           className="grid gap-6 md:grid-cols-2 lg:grid-cols-3"
         >
           {cardItems.map((item) => (
-            <motion.div
-              key={`${item.cap_id}-${item.allowlist_id}`}
-              variants={item}
-            >
+            <motion.div key={`${item.cap_id}-${item.allowlist_id}`}>
               <Card className="overflow-hidden h-full bg-background/50 backdrop-blur-sm border-border/60 hover:border-primary/30 transition-all">
                 <CardHeader className="pb-3">
                   <div className="flex justify-between items-start">
@@ -255,12 +252,12 @@ export function AllAllowlist() {
               <div className="bg-primary/5 p-4 rounded-full mb-4">
                 <ListChecks className="h-8 w-8 text-primary/70" />
               </div>
-              <h3 className="text-lg font-medium">Create New Tier</h3>
+              <h3 className="text-lg font-medium">Create New Content</h3>
               <p className="text-sm text-muted-foreground mt-2 mb-4">
                 Set up a new membership tier with exclusive content
               </p>
               <Button variant="outline" size="sm">
-                Create Tier
+                Create Content
               </Button>
             </Card>
           </motion.div>

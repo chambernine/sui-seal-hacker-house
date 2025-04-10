@@ -12,7 +12,7 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+
 import { useEffect, useState } from "react";
 import {
   Copy,
@@ -30,7 +30,6 @@ import { isValidSuiAddress } from "@mysten/sui/utils";
 import { useNetworkVariable } from "../../config/networkConfig";
 import { getObjectExplorerLink } from "@/lib/sui";
 import { motion } from "framer-motion";
-import { cn } from "@/lib/utils";
 
 export interface Allowlist {
   id: string;
@@ -115,14 +114,6 @@ export function Allowlist({ setRecipientAllowlist, setCapId }: AllowlistProps) {
 
     // Call getAllowlist immediately
     getAllowlist();
-
-    // Set up interval to call getAllowlist every 3 seconds
-    const intervalId = setInterval(() => {
-      getAllowlist();
-    }, 3000);
-
-    // Cleanup interval on component unmount
-    return () => clearInterval(intervalId);
   }, [id, currentAccount?.address]);
 
   const { mutate: signAndExecute } = useSignAndExecuteTransaction({

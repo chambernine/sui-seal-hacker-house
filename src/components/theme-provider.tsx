@@ -10,13 +10,22 @@ export function ThemeProvider({
 }) {
   const [mounted, setMounted] = useState(false);
 
+  // Set dark as default
+  const defaultProps = {
+    defaultTheme: "dark",
+    storageKey: "cryptofans-theme",
+    enableSystem: true,
+    enableColorScheme: true,
+    ...props,
+  };
+
   useEffect(() => {
     setMounted(true);
   }, []);
 
   if (!mounted) {
-    return null;
+    return <div style={{ visibility: "hidden" }}>{children}</div>;
   }
 
-  return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
+  return <NextThemesProvider {...defaultProps}>{children}</NextThemesProvider>;
 }

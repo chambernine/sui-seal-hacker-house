@@ -1,20 +1,28 @@
 import React, { useState } from "react";
 import { Transaction } from "@mysten/sui/transactions";
+
 import { useSignAndExecuteTransaction, useSuiClient } from "@mysten/dapp-kit";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { getAllowlistedKeyServers, SealClient } from "@mysten/seal";
 import { fromHex, toHex } from "@mysten/sui/utils";
 import { useNetworkVariable } from "@/config/networkConfig";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import {
+  Loader2,
   Upload,
-  ArrowUpCircle,
-  CheckCircle,
-  ServerCrash,
-  RefreshCcw,
+  Image,
+  Check,
   Server,
+  FileImage,
+  Lock,
 } from "lucide-react";
-import { motion } from "framer-motion";
 
 export type Data = {
   status: string;
@@ -49,9 +57,7 @@ export function WalrusUpload({
   const [file, setFile] = useState<File | null>(null);
   const [info, setInfo] = useState<Data | null>(null);
   const [isUploading, setIsUploading] = useState<boolean>(false);
-  const [uploadProgress, setUploadProgress] = useState<number>(0);
   const [selectedService, setSelectedService] = useState<string>("service1");
-  const [dragActive, setDragActive] = useState<boolean>(false);
 
   const SUI_VIEW_TX_URL = `https://suiscan.xyz/testnet/tx`;
   const SUI_VIEW_OBJECT_URL = `https://suiscan.xyz/testnet/object`;
@@ -128,92 +134,52 @@ export function WalrusUpload({
       }),
   });
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = event.target.files?.[0];
-    validateAndSetFile(selectedFile);
-  };
-
-  const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    event.stopPropagation();
-    setDragActive(false);
-
-    if (event.dataTransfer.files && event.dataTransfer.files.length > 0) {
-      const selectedFile = event.dataTransfer.files[0];
-      validateAndSetFile(selectedFile);
-    }
-  };
-
-  const validateAndSetFile = (selectedFile?: File) => {
-    if (!selectedFile) return;
-
+  const handleFileChange = (event: any) => {
+    const file = event.target.files[0];
     // Max 10 MiB size
-    if (selectedFile.size > 10 * 1024 * 1024) {
+    if (file.size > 10 * 1024 * 1024) {
       alert("File size must be less than 10 MiB");
       return;
     }
     // Check if file is an image
-    if (!selectedFile.type.startsWith("image/")) {
+    if (!file.type.startsWith("image/")) {
       alert("Only image files are allowed");
       return;
     }
-    setFile(selectedFile);
+    setFile(file);
     setInfo(null);
   };
 
   const handleSubmit = () => {
-    if (!file) return;
-
     setIsUploading(true);
-    setUploadProgress(0);
-
-    // Simulate progress for better UX
-    const progressInterval = setInterval(() => {
-      setUploadProgress((prev) => {
-        const newProgress = prev + Math.random() * 15;
-        return newProgress >= 90 ? 90 : newProgress;
-      });
-    }, 300);
-
-    const reader = new FileReader();
-    reader.onload = async function (event) {
-      if (event.target && event.target.result) {
-        const result = event.target.result;
-        if (result instanceof ArrayBuffer) {
-          try {
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = async function (event) {
+        if (event.target && event.target.result) {
+          const result = event.target.result;
+          if (result instanceof ArrayBuffer) {
             const nonce = crypto.getRandomValues(new Uint8Array(5));
             const policyObjectBytes = fromHex(policyObject);
             const id = toHex(new Uint8Array([...policyObjectBytes, ...nonce]));
-
             const { encryptedObject: encryptedBytes } = await client.encrypt({
               threshold: 2,
               packageId,
               id,
               data: new Uint8Array(result),
             });
-
             const storageInfo = await storeBlob(encryptedBytes);
-            clearInterval(progressInterval);
-            setUploadProgress(100);
-
-            setTimeout(() => {
-              displayUpload(storageInfo.info, file.type);
-              setIsUploading(false);
-            }, 500);
-          } catch (error) {
-            console.error("Error during encryption/upload:", error);
-            clearInterval(progressInterval);
+            displayUpload(storageInfo.info, file.type);
             setIsUploading(false);
-            alert("Error during encryption or upload. Please try again.");
+          } else {
+            console.error("Unexpected result type:", typeof result);
+            setIsUploading(false);
           }
-        } else {
-          clearInterval(progressInterval);
-          setIsUploading(false);
-          console.error("Unexpected result type:", typeof result);
         }
-      }
-    };
-    reader.readAsArrayBuffer(file);
+      };
+      reader.readAsArrayBuffer(file);
+    } else {
+      console.error("No file selected");
+    }
   };
 
   const displayUpload = (storage_info: any, media_type: any) => {
@@ -303,169 +269,173 @@ export function WalrusUpload({
   }
 
   return (
-    <Card className="overflow-hidden border-border/60 bg-background/50 backdrop-blur-sm">
-      <CardContent className="p-6">
-        <h2 className="text-xl font-bold mb-6">Upload Exclusive Photos</h2>
-
-        <div className="grid gap-6">
-          {/* Walrus service selector */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium block mb-1">
-              Select upload service:
-            </label>
-            <div className="relative rounded-md border border-input">
-              <select
-                value={selectedService}
-                onChange={(e) => setSelectedService(e.target.value)}
-                className="w-full bg-transparent py-2 pl-3 pr-10 text-sm focus:ring-2 focus:ring-primary/20 outline-none rounded-md"
-                aria-label="Select Walrus service"
-              >
-                {services.map((service) => (
-                  <option
-                    key={service.id}
-                    value={service.id}
-                    className="bg-background"
-                  >
-                    {service.name}
-                  </option>
-                ))}
-              </select>
-              <Server className="absolute right-3 top-2.5 h-4 w-4 opacity-50 pointer-events-none" />
-            </div>
-          </div>
-
-          {/* File upload area */}
-          <div
-            className={`border-2 border-dashed rounded-lg p-8 transition-all ${
-              dragActive ? "border-primary bg-primary/5" : "border-border"
-            } ${file ? "bg-accent/20" : ""}`}
-            onDragOver={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setDragActive(true);
-            }}
-            onDragEnter={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setDragActive(true);
-            }}
-            onDragLeave={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setDragActive(false);
-            }}
-            onDrop={handleDrop}
+    <Card className="overflow-hidden bg-background/50 backdrop-blur-sm border-border/60">
+      <CardHeader>
+        <div className="bg-primary/10 w-10 h-10 rounded-full flex items-center justify-center mb-2">
+          <FileImage className="h-5 w-5 text-primary" />
+        </div>
+        <CardTitle>Upload Exclusive Photo</CardTitle>
+        <CardDescription>
+          Upload and encrypt your private photos for subscribers
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        {/* Service Selection */}
+        <div className="space-y-2">
+          <label
+            htmlFor="walrus-service"
+            className="text-sm font-medium flex items-center gap-1.5"
           >
-            <div className="flex flex-col items-center justify-center text-center">
-              {file ? (
-                <div className="space-y-4 w-full">
-                  <div className="flex items-center justify-center">
-                    <CheckCircle className="h-8 w-8 text-primary" />
-                  </div>
-                  <p className="font-medium">{file.name}</p>
-                  <p className="text-sm text-muted-foreground">
-                    {(file.size / (1024 * 1024)).toFixed(2)} MB
-                  </p>
-                  <div className="flex justify-center">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setFile(null)}
-                      className="flex items-center gap-1"
-                    >
-                      <RefreshCcw className="h-3.5 w-3.5" />
-                      Change
-                    </Button>
-                  </div>
-                </div>
-              ) : (
-                <>
-                  <div className="bg-primary/10 p-3 rounded-full mb-4">
-                    <Upload className="h-6 w-6 text-primary" />
-                  </div>
-                  <h3 className="text-lg font-semibold">
-                    Add exclusive photos
-                  </h3>
-                  <p className="text-sm text-muted-foreground mt-1 mb-4">
-                    PNG, JPG or GIF up to 10MB
-                  </p>
-                  <label htmlFor="file-upload" className="cursor-pointer">
-                    <Button variant="outline" size="sm">
-                      Browse files
-                    </Button>
-                  </label>
-                </>
-              )}
-              <input
-                id="file-upload"
-                type="file"
-                onChange={handleFileChange}
-                accept="image/*"
-                className="hidden"
-                aria-label="Choose image file to upload"
-              />
-            </div>
-          </div>
+            <Server className="h-4 w-4 text-muted-foreground" />
+            Select Walrus service:
+          </label>
+          <select
+            id="walrus-service"
+            value={selectedService}
+            onChange={(e) => setSelectedService(e.target.value)}
+            aria-label="Select Walrus service"
+            className="w-full rounded-md border bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/20 appearance-none"
+          >
+            {services.map((service) => (
+              <option key={service.id} value={service.id}>
+                {service.name}
+              </option>
+            ))}
+          </select>
+        </div>
 
-          {/* Upload button section */}
-          <div className="space-y-4">
+        {/* File upload */}
+        <div className="space-y-4">
+          <label htmlFor="file-upload" className="text-sm font-medium">
+            Select Image to Upload
+          </label>
+
+          <div className="flex flex-col items-center gap-3">
+            {!file ? (
+              <>
+                <FileImage className="h-10 w-10 text-muted-foreground" />
+                <input
+                  id="file-upload"
+                  type="file"
+                  onChange={handleFileChange}
+                  accept="image/*"
+                  aria-label="Choose image file to upload"
+                  className="hidden"
+                />
+                <Button
+                  variant="outline"
+                  onClick={() =>
+                    document.getElementById("file-upload")?.click()
+                  }
+                  className="gap-2"
+                >
+                  <Image className="h-4 w-4" />
+                  Browse for Image
+                </Button>
+              </>
+            ) : (
+              <div className="w-full bg-primary/5 border border-primary/10 p-4 rounded-md flex flex-col items-center">
+                <div className="bg-background/50 p-2 rounded-full mb-2">
+                  <FileImage className="h-8 w-8 text-primary" />
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <Check className="h-4 w-4 text-green-500" />
+                  <span className="font-medium">{file.name}</span>
+                </div>
+                <Badge variant="outline" className="bg-background/70 mt-1">
+                  {(file.size / 1024 / 1024).toFixed(2)} MB
+                </Badge>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    setFile(null);
+                    setInfo(null);
+                    // Clear the file input
+                    const fileInput = document.getElementById(
+                      "file-upload"
+                    ) as HTMLInputElement;
+                    if (fileInput) fileInput.value = "";
+                  }}
+                  className="mt-3"
+                >
+                  Change Image
+                </Button>
+              </div>
+            )}
+            <p className="text-xs text-muted-foreground">
+              File size must be less than 10 MiB. Only image files are allowed.
+            </p>
+          </div>
+        </div>
+
+        {/* Upload steps */}
+        <div className="grid gap-4 sm:grid-cols-2">
+          <div className="space-y-2">
             <Button
               onClick={handleSubmit}
               disabled={file === null || isUploading}
-              className="w-full flex gap-2 items-center relative overflow-hidden"
+              className="w-full"
+              variant="secondary"
             >
               {isUploading ? (
-                <>
-                  <div
-                    className="absolute left-0 top-0 bottom-0 bg-primary/20"
-                    style={{ width: `${uploadProgress}%` }}
-                  />
-                  <span className="relative">Encrypting & Uploading...</span>
-                </>
+                <div className="flex items-center gap-2">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span>Encrypting & Uploading...</span>
+                </div>
               ) : (
-                <>
-                  <ArrowUpCircle className="h-4 w-4" />
-                  First step: Encrypt and upload photo
-                </>
+                <div className="flex items-center gap-2">
+                  <Upload className="h-4 w-4" />
+                  <span>1. Encrypt & Upload</span>
+                </div>
               )}
             </Button>
-
-            {/* Progress indication */}
-            {isUploading && (
-              <div className="flex items-center justify-center gap-2">
-                <div className="relative w-full h-1.5 bg-secondary rounded-full overflow-hidden">
-                  <div
-                    className="absolute left-0 top-0 bottom-0 bg-primary transition-all duration-300"
-                    style={{ width: `${uploadProgress}%` }}
-                  />
-                </div>
-                <span className="text-xs font-medium">
-                  {Math.round(uploadProgress)}%
-                </span>
-              </div>
-            )}
+            <p className="text-xs text-muted-foreground text-center">
+              First encrypt and upload your image to Walrus
+            </p>
           </div>
 
-          {/* Upload result */}
-          {info && file && (
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="border rounded-lg p-4 bg-accent/20"
-              role="region"
-              aria-label="Upload details"
+          <div className="space-y-2">
+            <Button
+              onClick={() => handlePublish(policyObject, cap_id, moduleName)}
+              disabled={!info || !file || policyObject === ""}
+              className="w-full"
             >
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">Status:</span>
-                  <span className="text-sm">{info.status}</span>
-                </div>
+              <div className="flex items-center gap-2">
+                <Lock className="h-4 w-4" />
+                <span>2. Associate to Membership</span>
+              </div>
+            </Button>
+            <p className="text-xs text-muted-foreground text-center">
+              Then link the photo to your membership
+            </p>
+          </div>
+        </div>
 
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">Content:</span>
+        {/* Upload info */}
+        {info && file && (
+          <div className="rounded-lg border bg-background/70 backdrop-blur-sm p-4 space-y-3">
+            <div className="flex items-center gap-2">
+              <Check className="h-5 w-5 text-green-500" />
+              <h4 className="font-medium">Upload Successful</h4>
+            </div>
+            <div className="grid gap-2">
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Status:</span>
+                <span className="font-medium">{info.status}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-muted-foreground">Blob ID:</span>
+                <span className="font-medium font-mono">
+                  {info.blobId.substring(0, 12)}...
+                </span>
+              </div>
+              <div className="flex justify-between gap-4 text-sm">
+                <span className="text-muted-foreground">Links:</span>
+                <div className="space-x-2 flex">
                   <a
                     href={info.blobUrl}
-                    className="text-sm text-primary underline underline-offset-4"
+                    className="text-primary hover:underline text-sm"
                     download
                     onClick={(e) => {
                       e.preventDefault();
@@ -475,43 +445,22 @@ export function WalrusUpload({
                         "noopener,noreferrer"
                       );
                     }}
-                    aria-label="Download encrypted blob"
                   >
-                    View encrypted photo
+                    Encrypted File
                   </a>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">Sui Object:</span>
                   <a
                     href={info.suiUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-sm text-primary underline underline-offset-4"
-                    aria-label="View Sui object details"
+                    className="text-primary hover:underline text-sm"
                   >
-                    View details
+                    Sui Object
                   </a>
                 </div>
               </div>
-            </motion.div>
-          )}
-
-          {/* Association button */}
-          <Button
-            onClick={() => {
-              handlePublish(policyObject, cap_id, moduleName);
-            }}
-            disabled={!info || !file || policyObject === ""}
-            variant={
-              !info || !file || policyObject === "" ? "outline" : "default"
-            }
-            className="w-full"
-            aria-label="Associate file to Sui object"
-          >
-            Second step: Add to membership content
-          </Button>
-        </div>
+            </div>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

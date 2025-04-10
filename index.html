@@ -5,9 +5,13 @@
   <meta charset="UTF-8" />
   <link rel="icon" type="image/svg+xml" href="/logo.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CryptoFans | Exclusive Encrypted Content Platform</title>
+  <title>CryptoFans | Premium Exclusive Content Platform</title>
   <meta name="description"
     content="Subscribe to exclusive encrypted content on the Sui blockchain with secure access controls using SEAL encryption technology.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
   <style>
     .page-loader {
       display: flex;
@@ -19,7 +23,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: #06060A;
+      background: linear-gradient(135deg, #1E1525 0%, #1a1334 100%);
       z-index: 9999;
       transition: opacity 0.3s ease-out;
     }
@@ -30,13 +34,40 @@
     }
 
     .loader-spinner {
-      width: 48px;
-      height: 48px;
+      width: 60px;
+      height: 60px;
+      position: relative;
+      margin-bottom: 24px;
+    }
+
+    .loader-spinner::before,
+    .loader-spinner::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       border-radius: 50%;
-      border: 3px solid rgba(255, 255, 255, 0.1);
-      border-top-color: #ffffff;
-      animation: spin 1s infinite linear;
-      margin-bottom: 16px;
+      border: 3px solid transparent;
+      border-top-color: #a45bff;
+      animation: spin 1.5s linear infinite;
+    }
+
+    .loader-spinner::before {
+      border-top-color: #a45bff;
+      border-bottom-color: #a45bff;
+      animation-duration: 1.5s;
+    }
+
+    .loader-spinner::after {
+      border-top-color: #ff64c1;
+      border-left-color: #ff64c1;
+      animation-duration: 1s;
+      width: 75%;
+      height: 75%;
+      top: 12.5%;
+      left: 12.5%;
     }
 
     @keyframes spin {
@@ -46,17 +77,31 @@
     }
 
     .loader-text {
-      font-family: -apple-system, system-ui, sans-serif;
+      font-family: 'Inter', system-ui, sans-serif;
       color: #ffffff;
-      font-size: 16px;
+      font-size: 18px;
+      font-weight: 500;
+      background: linear-gradient(90deg, #a45bff, #ff64c1);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .loader-subtitle {
+      font-family: 'Inter', system-ui, sans-serif;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 14px;
+      margin-top: 8px;
+      font-weight: 400;
     }
   </style>
 </head>
 
-<body>
+<body class="dark">
   <div class="page-loader" id="page-loader">
     <div class="loader-spinner"></div>
-    <div class="loader-text">Loading CryptoFans Platform</div>
+    <div class="loader-text">CryptoFans</div>
+    <div class="loader-subtitle">Premium Exclusive Content Platform</div>
   </div>
   <div id="root"></div>
   <script type="module" src="/src/main.tsx"></script>
@@ -64,7 +109,7 @@
     window.addEventListener('load', function () {
       setTimeout(function () {
         document.getElementById('page-loader').classList.add('loaded');
-      }, 300);
+      }, 800);
     });
   </script>
 </body>

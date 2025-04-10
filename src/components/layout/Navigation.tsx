@@ -15,7 +15,7 @@ export const Navigation = () => {
 
   const navItems = [
     { name: "Home", path: "/" },
-    { name: "Create Membership", path: "/allowlist-example" },
+    { name: "Create Content", path: "/allowlist-example" },
     { name: "My Content", path: "/allowlist-example/admin/allowlists" },
   ];
 

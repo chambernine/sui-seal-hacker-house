@@ -35,7 +35,7 @@ export function CreateAllowlist() {
 
   function createAllowlist(name: string) {
     if (name.trim() === "") {
-      alert("Please enter a name for your membership tier");
+      alert("Please enter a name for your photo content");
       return;
     }
 
@@ -89,45 +89,44 @@ export function CreateAllowlist() {
         transition={{ duration: 0.5 }}
       >
         <div className="flex flex-col gap-2">
-          <h1 className="text-3xl font-bold tracking-tight">
-            Create Membership Tier
-          </h1>
+          <h1 className="text-3xl font-bold tracking-tight">Create content</h1>
           <p className="text-muted-foreground">
-            Create exclusive content tiers for your subscribers
+            Create exclusive photo contents for your viewers
           </p>
         </div>
       </motion.div>
 
       <div className="grid gap-6 md:grid-cols-2">
-        {/* Create New Membership Tier Card */}
+        {/* Create New Photo Content Card */}
         <Card className="overflow-hidden bg-background/50 backdrop-blur-sm border-border/60">
           <CardHeader className="pb-3">
             <div className="bg-primary/10 w-10 h-10 rounded-full flex items-center justify-center mb-2">
               <PlusCircle className="h-5 w-5 text-primary" />
             </div>
-            <CardTitle>Create New Membership Tier</CardTitle>
+            <CardTitle>Create New Photo Content</CardTitle>
             <CardDescription>
-              Create a new subscription tier to manage exclusive content access
+              Create a new exclusive photo content to manage content access
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <div className="space-y-2">
                 <label htmlFor="allowlist-name" className="text-sm font-medium">
-                  Membership Name
+                  Content Name
                 </label>
                 <div className="relative">
                   <input
                     id="allowlist-name"
                     className="w-full rounded-md border bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary/20"
-                    placeholder="Enter a name for your membership tier"
+                    placeholder="Enter a name for your photo content"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                   />
                   <FileText className="absolute right-3 top-2.5 h-4 w-4 text-muted-foreground pointer-events-none" />
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  For example: "Premium", "VIP", or "Exclusive Access"
+                  For example: "Summer Collection", "Portrait Series", or
+                  "Travel Photos"
                 </p>
               </div>
 
@@ -136,36 +135,35 @@ export function CreateAllowlist() {
                 onClick={() => createAllowlist(name)}
                 disabled={name.trim() === "" || isCreating}
               >
-                {isCreating ? "Creating..." : "Create Membership Tier"}
+                {isCreating ? "Creating..." : "Create Photo Content"}
               </Button>
             </div>
           </CardContent>
         </Card>
 
-        {/* View Existing Memberships Card */}
+        {/* View Existing Contents Card */}
         <Card className="overflow-hidden bg-background/50 backdrop-blur-sm border-border/60">
           <CardHeader className="pb-3">
             <div className="bg-primary/10 w-10 h-10 rounded-full flex items-center justify-center mb-2">
               <Users className="h-5 w-5 text-primary" />
             </div>
-            <CardTitle>Manage Your Content</CardTitle>
+            <CardTitle>Manage Your Contents</CardTitle>
             <CardDescription>
-              Control access to your exclusive content and manage subscribers
+              Control access to your exclusive photos and manage viewers
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <p className="text-sm text-muted-foreground">
-                View and manage all your membership tiers. Add or remove
-                subscribers, upload exclusive photos, and configure access
-                settings.
+                View and manage all your photo contents. Add or remove viewers,
+                upload exclusive photos, and configure access settings.
               </p>
               <Button
                 variant="outline"
                 className="w-full border-primary/20 hover:border-primary/40"
                 onClick={handleViewAll}
               >
-                View All Content
+                View All Contents
               </Button>
             </div>
           </CardContent>
@@ -176,27 +174,27 @@ export function CreateAllowlist() {
       <Card className="overflow-hidden bg-background/50 backdrop-blur-sm border-border/60">
         <CardContent className="p-6">
           <h3 className="text-lg font-semibold mb-3">
-            Quick Guide to Creating Content Memberships
+            Quick Guide to Creating Exclusive Photo Contents
           </h3>
           <div className="grid gap-4 sm:grid-cols-3">
             <div className="space-y-2">
               <div className="bg-primary/10 w-8 h-8 rounded-full flex items-center justify-center">
                 <span className="font-medium">1</span>
               </div>
-              <h4 className="font-medium">Create a Membership Tier</h4>
+              <h4 className="font-medium">Create a Photo Content</h4>
               <p className="text-sm text-muted-foreground">
-                Set up a named tier to organize your exclusive content for
-                subscribers.
+                Set up a named content to organize your exclusive photos for
+                viewers.
               </p>
             </div>
             <div className="space-y-2">
               <div className="bg-primary/10 w-8 h-8 rounded-full flex items-center justify-center">
                 <span className="font-medium">2</span>
               </div>
-              <h4 className="font-medium">Add Subscribers</h4>
+              <h4 className="font-medium">Add Viewers</h4>
               <p className="text-sm text-muted-foreground">
-                Add wallet addresses of subscribers who should have access to
-                your content.
+                Add wallet addresses of viewers who should have access to your
+                photos.
               </p>
             </div>
             <div className="space-y-2">
@@ -206,7 +204,7 @@ export function CreateAllowlist() {
               <h4 className="font-medium">Upload Private Photos</h4>
               <p className="text-sm text-muted-foreground">
                 Upload and encrypt your exclusive photos, which will only be
-                viewable by your subscribers.
+                viewable by authorized viewers.
               </p>
             </div>
           </div>
